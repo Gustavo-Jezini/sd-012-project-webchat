@@ -7,7 +7,7 @@ const http = require('http').createServer(app); // conexão entre servidor e cli
 
 const io = require('socket.io')(http, { // servidor ao qual iremos nos comunicar e verbos de acesso
   cors: {
-    origin: 'http://localhost:3000/',
+    origin: 'http://localhost:3002/',
     method: ['GET', 'POST'],
   },
 });
@@ -22,9 +22,9 @@ app.set('views', `${__dirname}/src/views`); // aqui informamos onde as views ser
 app.use(express.static(`${__dirname}/public`));
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/src/views/chat`);
+  res.render(`${__dirname}/src/views/chat`);
 });
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3002 } = process.env;
 
 http.listen(PORT, () => console.log(`App runnign on port: ${PORT}`));
