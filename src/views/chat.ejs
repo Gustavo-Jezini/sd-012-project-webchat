@@ -6,10 +6,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="/socket.io/socket.io.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .chat {
+      height: 500px;
+      width: 600px;
+      border: 1px solid;
+    }
+    .container {
+      margin: auto;
+    }
+    body {
+      display: flex;
+      min-height: 100vh;
+    }
+    form {
+      display: flex;
+      gap: 5px;
+      background-color: darkgrey;
+      padding: 12px;
+    }
+    input {
+      flex-grow: 1;
+    }
+    li {
+      list-style: none;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <ul class="chat"></ul>
+    <form>
+      <input/>
+      <button>Enviar</button>
+    </form>
+  </div>
   <script>
     const socketCli = io()
+    const chatScreen = document.querySelector('.chat')
+    const chatForm = document.querySelector('form')
+    const chatInput = document.querySelector('form input')
+    const chatButton = document.querySelector('form button')
+
+    chatForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const chatMessage = chatInput.value
+      const nickname = socketCli.id
+      socketCli.emit('message', { chatMessage, nickname })
+    });
+
+    const renderMessage = message => {
+      const li = document.createElement('li')
+      li.innerText = message
+      chatScreen.appendChild(li)
+      chatInput.value = ''
+    };
+
+    socketCli.on('message', renderMessage)
   </script>
 </body>
 </html>

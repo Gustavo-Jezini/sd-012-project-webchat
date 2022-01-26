@@ -1,6 +1,7 @@
 // Faça seu código aqui
 require('dotenv').config();
 const express = require('express');
+const moment = require('moment');
 
 const app = express();
 const http = require('http').createServer(app); // conexão entre servidor e cliente
@@ -13,7 +14,11 @@ const io = require('socket.io')(http, { // servidor ao qual iremos nos comunicar
 });
 
 io.on('connection', (socket) => {
-  console.log(`${socket.id} Acabou de se conectar!`);
+  socket.on('message', ({ chatMessage, nickname }) => {
+    const timestamp = moment().format('DD-MM-YYYY HH:mm:ss');
+    // addMessage(timestamp, chatMessage, nickname);
+    io.emit('message', `${timestamp} - ${nickname}: ${chatMessage}`);
+  });
 });
 
 app.set('view engine', 'ejs');
